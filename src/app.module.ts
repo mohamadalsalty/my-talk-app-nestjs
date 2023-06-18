@@ -1,10 +1,23 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule } from '@nestjs/config';
+import { getDatabaseConfig } from './config/database/postgres';
+import { CommentsModule } from './comments/comments.module';
+
+require('dotenv').config();
 
 @Module({
-  imports: [],
+  imports: [
+    TypeOrmModule.forRootAsync({
+      useFactory: () => getDatabaseConfig(),
+    }),
+    ConfigModule.forRoot(),
+    CommentsModule,
+
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }
